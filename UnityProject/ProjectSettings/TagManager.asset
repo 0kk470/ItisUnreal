@@ -7,11 +7,12 @@ TagManager:
   - UICamera
   - EventSystem
   - Enemy
+  - CinemachineTarget
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Barrier
