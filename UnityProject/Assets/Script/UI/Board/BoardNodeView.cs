@@ -1,15 +1,15 @@
 using Saltyfish.Logic;
+using Saltyfish.ObjectPool;
 using Saltyfish.Resource;
 using Saltyfish.Util;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Saltyfish.UI.Board
 {
-    public class BoardNodeView:UIDataContainer<BoardNode>
+    public class BoardNodeView:UIDataContainer<BoardNode>,IPointerClickHandler,ICollectable
     {
-
-        public BoardUI BoardUI{get;set;}
 
         [SerializeField]
         private Image m_Icon;
@@ -39,9 +39,38 @@ namespace Saltyfish.UI.Board
             {
                 if(m_Data.IsMarked)
                 {
-                    m_Icon.sprite = AssetCache.Default.GetAsset<Sprite>("Sprites/Board/Flag");
+                    if(m_Data.Mark == NodeMarkType.Flag)
+                        m_Icon.sprite = AssetCache.Default.GetAsset<Sprite>("Sprites/Board/Flag");
+                    else if(m_Data.Mark == NodeMarkType.Question)
+                        m_Icon.sprite = AssetCache.Default.GetAsset<Sprite>("Sprites/Board/Question");
                 }
             }
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if(m_Data == null)
+                return;
+            if(m_Data.IsExplored)
+                return;
+            if(eventData.button == PointerEventData.InputButton.Left)
+            {
+                m_Data?.Board?.Step(m_Data.X, m_Data.Y);
+            }
+            else if(eventData.button == PointerEventData.InputButton.Right)
+            {
+                m_Data.Mark += 1;
+            }
+        }
+
+        public void OnUsage()
+        {
+            
+        }
+
+        public void OnRecycle()
+        {
+            m_Data = null;
         }
     }
 }

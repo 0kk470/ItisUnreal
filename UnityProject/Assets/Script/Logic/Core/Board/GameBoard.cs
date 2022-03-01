@@ -1,5 +1,8 @@
 using UnityEngine;
 using Saltyfish.Data;
+using System.Linq;
+using System.Collections.Generic;
+using Saltyfish.Util;
 
 namespace Saltyfish.Logic
 {
@@ -10,11 +13,31 @@ namespace Saltyfish.Logic
     {
         private BoardNode[,] m_Nodes;
 
+        public List<BoardNode> NodeList => m_Nodes.ToList();
+
         public bool IsInit => m_Nodes != null;
 
         public int Row => m_Nodes?.GetLength(0) ?? 0;
 
         public int Column => m_Nodes?.GetLength(1) ?? 0;
+
+        public bool IsCleared 
+        {
+            get
+            {
+                if(!IsInit) return false;
+                int x = Row, y = Column;
+                for (int i = 0; i < x; ++i)
+                {
+                    for (int j = 0; j < y; ++j)
+                    {
+                        if(!m_Nodes[i, j].IsExploredBlank)
+                            return false;
+                    }
+                }
+                return true;
+            }
+        }
 
         public void Init(BoardCreateData createData)
         {
@@ -83,6 +106,8 @@ namespace Saltyfish.Logic
                 GameManager.GameOver();
             }
             Explore(x, y);
+            if(IsCleared)
+                GameManager.GameWin();
         }
 
         public bool Explore(int x, int y)
@@ -107,14 +132,6 @@ namespace Saltyfish.Logic
                 }
             }
             return false;
-        }
-
-        public void MarkNode(int x, int y)
-        {
-            var node = GetNode(x, y);
-            if (node == null)
-                return;
-            node.IsMarked = !node.IsMarked;
         }
     }
 }
