@@ -3,9 +3,6 @@ using Saltyfish.Util;
 
 namespace Saltyfish
 {
-    /// <summary>
-    /// 游戏程序入口
-    /// </summary>
     public class Main : MonoBehaviour
     {
         #region Mono Callback
@@ -34,7 +31,6 @@ namespace Saltyfish
 
         private void Init()
         {
-            //加载策划表配置数据文件
             Data.TableConfig.Init();
 
             InitManagers();
