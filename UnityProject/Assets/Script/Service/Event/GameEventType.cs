@@ -12,15 +12,8 @@ namespace Saltyfish.Event
     public enum GameEventType
     {
 
-        OnGameLaunch,
+        OnGameOver,
 
-        OnUnitHpChanged,
-        OnUnitRecoverHp,
-        OnUnitDamaged,
-        OnUnitDead,
-        OnUnitChangeWeapon,
-
-
-        OnRoomComplete,
+        OnNodeUpdate,
     }
 }

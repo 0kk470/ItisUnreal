@@ -33,8 +33,6 @@ namespace Saltyfish.Logic
 
         public bool IsMine {get;set;}
 
-        public bool IsExploredBlank => IsExplored && !IsMine;
-
         public int MineNum{get; set;}
 
         public int X{get; private set;}

@@ -1,5 +1,8 @@
+using System;
+
 namespace Saltyfish.Data
 {
+    [Serializable]
     public struct BoardCreateData
     {
         public int x;
@@ -8,6 +11,6 @@ namespace Saltyfish.Data
 
         public int MineNum;
 
-        public int Seed;
+        public long Seed;
     }
 }

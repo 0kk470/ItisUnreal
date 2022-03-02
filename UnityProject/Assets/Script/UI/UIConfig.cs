@@ -11,6 +11,7 @@ namespace Saltyfish.UI
         public const string BlackCurtain = "BlackCurtain";
         public const string WeaponBuffSelectUI = "WeaponBuffSelectUI";
         public const string GameSettingUI = "GameSettingUI";
+        public const string BoardUI = "BoardUI";
     }
 
     public class UIConfig
@@ -36,8 +37,8 @@ namespace Saltyfish.UI
             { UINameConfig.PlayerUI,                new UIConfigParams(UINameConfig.PlayerUI,             UILayer.Lowest,       "Prefabs/UI/PlayerUI") },
             { UINameConfig.GameOverUI,              new UIConfigParams(UINameConfig.GameOverUI,           UILayer.Middle,       "Prefabs/UI/GameOverUI") },
             { UINameConfig.BlackCurtain,            new UIConfigParams(UINameConfig.BlackCurtain,         UILayer.Middle,       "Prefabs/UI/BlackCurtain") },
-            { UINameConfig.WeaponBuffSelectUI,      new UIConfigParams(UINameConfig.WeaponBuffSelectUI,   UILayer.Bottom,       "Prefabs/UI/WeaponBuffSelectUI") },
             { UINameConfig.GameSettingUI,           new UIConfigParams(UINameConfig.GameSettingUI,        UILayer.Bottom,       "Prefabs/UI/GameSettingUI") },
+            { UINameConfig.BoardUI,                 new UIConfigParams(UINameConfig.BoardUI,              UILayer.Bottom,       "Prefabs/UI/Board/BoardUI") },
         };
     }
 }

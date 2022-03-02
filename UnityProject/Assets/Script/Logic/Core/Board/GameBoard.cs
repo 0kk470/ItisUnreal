@@ -3,6 +3,7 @@ using Saltyfish.Data;
 using System.Linq;
 using System.Collections.Generic;
 using Saltyfish.Util;
+using Saltyfish.Event;
 
 namespace Saltyfish.Logic
 {
@@ -31,7 +32,7 @@ namespace Saltyfish.Logic
                 {
                     for (int j = 0; j < y; ++j)
                     {
-                        if(!m_Nodes[i, j].IsExploredBlank)
+                        if(!m_Nodes[i, j].IsMine && !m_Nodes[i, j].IsExplored)
                             return false;
                     }
                 }
@@ -47,7 +48,7 @@ namespace Saltyfish.Logic
                 Debug.LogErrorFormat("Invalid x or y for gameboard, x:{0}, y:{1}", x, y);
                 return;
             }
-            var r = new SystemRandom(createData.Seed);
+            var r = new SystemRandom((int)createData.Seed);
             m_Nodes = new BoardNode[x, y];
             for(int i = 0; i < x; ++i)
             {
@@ -87,6 +88,32 @@ namespace Saltyfish.Logic
             return true;
         }
 
+        private bool IsMine(int x, int y)
+        {
+            var node = GetNode(x, y);
+            if(node == null)
+                return false;
+            return node.IsMine;
+        }
+
+        private void CountMineNum(int x, int y)
+        {
+            var node = GetNode(x, y);
+            if(node == null)
+                return;
+            for(int i = -1; i <= 1; ++i)
+            {
+                for(int j = -1; j <= 1; ++j)
+                {
+                    if(i == 0 && j == 0) continue;
+                    if(IsMine(x + i, y + j))
+                    {
+                        node.MineNum += 1;
+                    }
+                }
+            }
+        }
+
         public BoardNode GetNode(int x, int y)
         {
             if (!IsValidPos(x, y))
@@ -110,28 +137,28 @@ namespace Saltyfish.Logic
                 GameManager.GameWin();
         }
 
-        public bool Explore(int x, int y)
+        public void Explore(int x, int y)
         {
             var node = GetNode(x, y);
             if (node == null)
-                return false;
+                return;
             if (node.IsMine)
-                return true;
+                return;
             if(node.IsExplored)
-                return false;
+                return;
             node.IsExplored = true;
-            for(int i = -1; i <= 1; ++i)
+            CountMineNum(x,y);
+            EventManager.DispatchEvent(GameEventType.OnNodeUpdate, node);
+            if (node.MineNum > 0)
+                return;
+            for (int i = -1; i <= 1; ++i)
             {
-                for(int j = -1; j <= 1; ++j)
+                for (int j = -1; j <= 1; ++j)
                 {
-                    if(x == 0 && y == 0) continue;
-                    if(Explore(x + i, y + j))
-                    {
-                        node.MineNum += 1;
-                    }
+                    if (i == 0 && j == 0) continue;
+                    Explore(x + i, y + j);
                 }
             }
-            return false;
         }
     }
 }
