@@ -12,6 +12,8 @@ namespace Saltyfish.Logic
 
     public class GameBoard
     {
+        const int ExploreRange = 1;
+
         private BoardNode[,] m_Nodes;
 
         public List<BoardNode> NodeList => m_Nodes.ToList();
@@ -101,9 +103,9 @@ namespace Saltyfish.Logic
             var node = GetNode(x, y);
             if(node == null)
                 return;
-            for(int i = -1; i <= 1; ++i)
+            for(int i = -ExploreRange; i <= ExploreRange; ++i)
             {
-                for(int j = -1; j <= 1; ++j)
+                for(int j = -ExploreRange; j <= ExploreRange; ++j)
                 {
                     if(i == 0 && j == 0) continue;
                     if(IsMine(x + i, y + j))
@@ -151,9 +153,9 @@ namespace Saltyfish.Logic
             EventManager.DispatchEvent(GameEventType.OnNodeUpdate, node);
             if (node.MineNum > 0)
                 return;
-            for (int i = -1; i <= 1; ++i)
+            for (int i = -ExploreRange; i <= ExploreRange; ++i)
             {
-                for (int j = -1; j <= 1; ++j)
+                for (int j = -ExploreRange; j <= ExploreRange; ++j)
                 {
                     if (i == 0 && j == 0) continue;
                     Explore(x + i, y + j);
