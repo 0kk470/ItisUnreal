@@ -1,4 +1,5 @@
 using System;
+using Saltyfish.Logic;
 
 namespace Saltyfish.Data
 {
@@ -12,5 +13,15 @@ namespace Saltyfish.Data
         public int MineNum;
 
         public long Seed;
+
+        public Unit Player;
+
+        public Unit Boss;
+
+        public void Reset()
+        {
+            Player?.Reset();
+            Boss?.Reset();
+        }
     }
 }

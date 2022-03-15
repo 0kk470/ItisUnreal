@@ -6,12 +6,17 @@ using Saltyfish.Logic;
 using Saltyfish.ObjectPool;
 using Saltyfish.Util;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Saltyfish.UI.Board
 {
     public class BoardUI:UIBase
     {
+        const float minScale = 0.5f;
+        const float maxScale = 4f;
+
         [SerializeField]
         private BoardCreateData m_BoardCreateData;
 
@@ -26,6 +31,12 @@ namespace Saltyfish.UI.Board
 
         [SerializeField]
         private Button m_BackMenuBtn;
+
+        [Range(minScale, maxScale)]
+        private float m_BoardScale = 1;
+
+        [Range(5, 20)]
+        private float m_BoardScaleSpeed = 15;
 
         private List<BoardNodeView> m_AllNodes = new List<BoardNodeView>();
 
@@ -71,6 +82,27 @@ namespace Saltyfish.UI.Board
             }
         }
 
+        private void Update()
+        {
+            if(Mouse.current == null)
+                return;
+            var scrollValue = Mouse.current.scroll.ReadValue();
+            if(scrollValue.y > 0)
+            {
+                ScaleBoard(m_BoardScale + m_BoardScaleSpeed * Time.deltaTime);
+            }
+            else if(scrollValue.y < 0)
+            {
+                ScaleBoard(m_BoardScale - m_BoardScaleSpeed * Time.deltaTime);
+            }
+        }
+
+        private void ScaleBoard(float scale)
+        {
+            m_BoardScale = Mathf.Clamp(scale, minScale, maxScale);
+            m_Grid.transform.localScale = Vector3.one * m_BoardScale;
+        }
+
 
         private void OnNodeUpdate(BoardNode node)
         {
@@ -97,6 +129,7 @@ namespace Saltyfish.UI.Board
                 nodeData.Board = m_Board;
                 m_AllNodes.Add(nodeView);
             };
+            m_BoardCreateData.Reset();
             m_BoardCreateData.Seed = DateTime.Now.Ticks;
             m_Board.Init(m_BoardCreateData);
             var nodeList = m_Board.NodeList;

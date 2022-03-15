@@ -99,14 +99,14 @@ namespace Saltyfish.UI.Board
                 return;
             if(m_Data == null)
                 return;
-            if(m_Data.IsExplored)
-                return;
             if(eventData.button == PointerEventData.InputButton.Left)
             {
                 m_Data?.Board?.Step(m_Data.X, m_Data.Y);
             }
             else if(eventData.button == PointerEventData.InputButton.Right)
             {
+                if(m_Data.IsExplored)
+                    return;
                 m_Data.Mark += 1;
                 Refresh();
             }

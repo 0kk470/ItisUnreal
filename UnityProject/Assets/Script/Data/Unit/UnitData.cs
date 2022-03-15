@@ -3,7 +3,7 @@
 namespace Saltyfish.Data
 {
     [Serializable]
-    public struct NodeUnitData
+    public struct UnitData
     {
         public float Health;
 
@@ -11,7 +11,23 @@ namespace Saltyfish.Data
 
         public float Attack;
 
+#region Base Data
+
+        public float BaseMaxHealth;
+
+        public float BaseAttack;
+
         public const float MAX_HP = 999999;
 
+#endregion
+
+        public void Reset()
+        {
+            Health = 50;
+            MaxHealth = 50;
+            Attack = 0;
+            BaseAttack = 0;
+            BaseMaxHealth = 0;
+        }
     }
 }

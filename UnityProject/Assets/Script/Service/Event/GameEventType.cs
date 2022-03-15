@@ -15,5 +15,9 @@ namespace Saltyfish.Event
         OnGameOver,
 
         OnNodeUpdate,
+        OnUnitHpChanged,
+        OnUnitRecoverHp,
+        OnUnitDamaged,
+        OnUnitDead,
     }
 }

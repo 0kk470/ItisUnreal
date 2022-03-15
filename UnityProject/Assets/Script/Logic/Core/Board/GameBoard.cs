@@ -16,9 +16,17 @@ namespace Saltyfish.Logic
 
         private BoardNode[,] m_Nodes;
 
+        private Unit m_Player;
+
+        private Unit m_Boss;
+
+        private SystemRandom m_RandomGenerator;
+
         public List<BoardNode> NodeList => m_Nodes.ToList();
 
         public bool IsInit => m_Nodes != null;
+
+        public int CurStep {get; private set;}
 
         public int Row => m_Nodes?.GetLength(0) ?? 0;
 
@@ -44,13 +52,21 @@ namespace Saltyfish.Logic
 
         public void Init(BoardCreateData createData)
         {
+            InitNodes(createData);
+            InitSeed(createData);
+            InitMines(createData);
+            InitUnits(createData);
+        }
+
+        private void InitNodes(BoardCreateData createData)
+        {
+            CurStep = 0;
             int x = createData.x, y = createData.y;
             if (x <= 0 || y <= 0)
             {
                 Debug.LogErrorFormat("Invalid x or y for gameboard, x:{0}, y:{1}", x, y);
                 return;
             }
-            var r = new SystemRandom((int)createData.Seed);
             m_Nodes = new BoardNode[x, y];
             for(int i = 0; i < x; ++i)
             {
@@ -59,16 +75,36 @@ namespace Saltyfish.Logic
                     m_Nodes[i, j] = new BoardNode(i, j);
                 }
             }
+        }
+
+        private void InitSeed(BoardCreateData createData)
+        {
+            m_RandomGenerator = new SystemRandom((int)createData.Seed);
+        }
+
+        private void InitMines(BoardCreateData createData)
+        {
+            int x = createData.x, y = createData.y;
             int mineNum = createData.MineNum;
             while(mineNum > 0)
             {
-                int rx = r.Next(0, x);
-                int ry = r.Next(0, y);
+                int rx = m_RandomGenerator.Next(0, x);
+                int ry = m_RandomGenerator.Next(0, y);
                 if(!m_Nodes[rx, ry].IsMine)
                 {
                     m_Nodes[rx, ry].IsMine = true;
                     mineNum--;
                 }
+            }
+        }
+
+        private void InitUnits(BoardCreateData createData)
+        {
+            m_Player = createData.Player;
+            m_Boss = createData.Boss;
+            if(m_Player != null)
+            {
+                m_Player.IsPlayer = true;
             }
         }
 
@@ -130,13 +166,16 @@ namespace Saltyfish.Logic
                 return;
             if(node.IsExplored)
                 return;
+
             if(node.IsMine)
             {
-                GameManager.GameOver();
+               OnPlayerDamage(node);
+               MarkAsExplored(node);
             }
-            Explore(x, y);
-            if(IsCleared)
-                GameManager.GameWin();
+            else
+            {
+                Explore(x, y);
+            }
         }
 
         public void Explore(int x, int y)
@@ -148,9 +187,9 @@ namespace Saltyfish.Logic
                 return;
             if(node.IsExplored)
                 return;
-            node.IsExplored = true;
             CountMineNum(x,y);
-            EventManager.DispatchEvent(GameEventType.OnNodeUpdate, node);
+            OnBossDamage(node);
+            MarkAsExplored(node);
             if (node.MineNum > 0)
                 return;
             for (int i = -ExploreRange; i <= ExploreRange; ++i)
@@ -161,6 +200,32 @@ namespace Saltyfish.Logic
                     Explore(x + i, y + j);
                 }
             }
+        }
+
+        public void MarkAsExplored(BoardNode node)
+        {
+            node.IsExplored = true;
+            EventManager.DispatchEvent(GameEventType.OnNodeUpdate, node);
+        }
+
+        private void OnPlayerDamage(BoardNode node)
+        {
+            DamageInfo dmgInfo = new DamageInfo();
+            dmgInfo.AttackUnit = m_Boss;
+            dmgInfo.InjuredUnit = m_Player;
+            dmgInfo.RelatedNode = node;
+            dmgInfo.Damage = 1;
+            m_Player?.TakeDamage(dmgInfo);
+        }
+
+        private void OnBossDamage(BoardNode node)
+        {
+            DamageInfo dmgInfo = new DamageInfo();
+            dmgInfo.AttackUnit = m_Player;
+            dmgInfo.InjuredUnit = m_Boss;
+            dmgInfo.RelatedNode = node;
+            dmgInfo.Damage = node.MineNum;
+            m_Boss?.TakeDamage(dmgInfo);
         }
     }
 }
