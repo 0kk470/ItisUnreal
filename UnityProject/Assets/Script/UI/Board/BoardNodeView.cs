@@ -101,7 +101,7 @@ namespace Saltyfish.UI.Board
                 return;
             if(eventData.button == PointerEventData.InputButton.Left)
             {
-                m_Data?.Board?.Step(m_Data.X, m_Data.Y);
+                m_Data.Board?.Step(m_Data.X, m_Data.Y);
             }
             else if(eventData.button == PointerEventData.InputButton.Right)
             {
