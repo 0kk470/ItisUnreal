@@ -6,7 +6,6 @@ using Saltyfish.Logic;
 using Saltyfish.ObjectPool;
 using Saltyfish.Util;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -31,6 +30,12 @@ namespace Saltyfish.UI.Board
 
         [SerializeField]
         private Button m_BackMenuBtn;
+
+        [SerializeField]
+        private BoardUnitView m_BossUnitView;
+
+        [SerializeField]
+        private BoardUnitView m_PlayerUnitView;
 
         [Range(minScale, maxScale)]
         private float m_BoardScale = 1;
@@ -129,16 +134,19 @@ namespace Saltyfish.UI.Board
                 nodeData.Board = m_Board;
                 m_AllNodes.Add(nodeView);
             };
+            
             m_BoardCreateData.Reset();
             m_BoardCreateData.Seed = DateTime.Now.Ticks;
             m_Board.Init(m_BoardCreateData);
+
             var nodeList = m_Board.NodeList;
-
             MonoUtil.GenerateMonoElementsWithPool(m_NodePrefabPath, nodeList, m_Grid.transform, OnCreate);
-
             m_Grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
             m_Grid.constraintCount = m_Board.Column;
             m_Grid.SetLayoutVertical();
+
+            m_PlayerUnitView.SetData(m_Board.Player);
+            m_BossUnitView.SetData(m_Board.Boss);
         }
 
         public void ClearAllNodes()

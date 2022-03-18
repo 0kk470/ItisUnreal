@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections;
+using cfg;
 using Saltyfish.Data;
 using Saltyfish.Event;
 using UnityEngine;
@@ -13,12 +14,21 @@ namespace Saltyfish.Logic
         [SerializeField]
         private UnitData m_UnitData;
 
+        public UnitTableData TableData{get;private set;} 
+
         public ref readonly UnitData UnitData => ref m_UnitData;
 
         public bool IsDead { get; private set; } = false;
 
         public bool IsPlayer{get;set;}
 
+#region UnitTable Api
+        public Sprite IconSprite => Resource.AssetCache.GetCache<Sprite>().GetAsset<Sprite>(TableData?.IconPath);
+
+        public string UnitName => TableData?.Name;
+
+        public string UnitDescription => TableData?.Description;
+#endregion
         public void Reset()
         {
             IsDead = false;
@@ -26,6 +36,23 @@ namespace Saltyfish.Logic
             m_UnitData.Reset();
         }
 
+        public static Unit NewUnit(int id)
+        {
+            var unitTable = TableConfig.ConfigData.UnitTable.GetOrDefault(id);
+            if(unitTable == null)
+            {
+                Debug.LogError("Error, No UnitTable Config, id: " + id);
+                return null;
+            }
+            var unit = new Unit();
+            unit.TableData = unitTable;
+            unit.m_UnitData.BaseMaxHealth = unitTable.BaseMaxHealth;
+            unit.m_UnitData.BaseAttack = unitTable.BaseMaxHealth;
+            unit.SetAttack(unitTable.BaseAttack);
+            unit.SetMaxHealth(unitTable.BaseMaxHealth);
+            unit.SetHp(unit.UnitData.MaxHealth);
+            return unit;
+        }
 
         public void TakeDamage(DamageInfo dmgInfo)
         {
@@ -33,9 +60,9 @@ namespace Saltyfish.Logic
             Event.EventManager.DispatchEvent(Event.GameEventType.OnUnitDamaged, dmgInfo);
         }
 
-        public int GetHP()
+        public void SetAttack(float attack)
         {
-            return (int)m_UnitData.Health;
+            m_UnitData.Attack = attack;
         }
 
         public void SetHp(float newHp)
@@ -43,7 +70,7 @@ namespace Saltyfish.Logic
             float prevHp = m_UnitData.Health;
             float curHp = Mathf.Clamp(newHp, 0, m_UnitData.MaxHealth);
             m_UnitData.Health = curHp;
-            EventManager.DispatchEvent(Event.GameEventType.OnUnitHpChanged, this, prevHp, newHp, m_UnitData.MaxHealth);
+            EventManager.DispatchEvent(Event.GameEventType.OnUnitHpChanged, this, prevHp, curHp, m_UnitData.MaxHealth);
 
             if (curHp <= 0)
                 Die();

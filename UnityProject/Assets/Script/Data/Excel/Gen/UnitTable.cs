@@ -14,30 +14,30 @@ using SimpleJSON;
 namespace cfg
 {
 
-public sealed class Buffsht
+public sealed class UnitTable
 {
-    private readonly Dictionary<int, Buff> _dataMap;
-    private readonly List<Buff> _dataList;
+    private readonly Dictionary<int, UnitTableData> _dataMap;
+    private readonly List<UnitTableData> _dataList;
     
-    public Buffsht(JSONNode _json)
+    public UnitTable(JSONNode _json)
     {
-        _dataMap = new Dictionary<int, Buff>();
-        _dataList = new List<Buff>();
+        _dataMap = new Dictionary<int, UnitTableData>();
+        _dataList = new List<UnitTableData>();
         
         foreach(JSONNode _row in _json.Children)
         {
-            var _v = Buff.DeserializeBuff(_row);
+            var _v = UnitTableData.DeserializeUnitTableData(_row);
             _dataList.Add(_v);
             _dataMap.Add(_v.Id, _v);
         }
     }
 
-    public Dictionary<int, Buff> DataMap => _dataMap;
-    public List<Buff> DataList => _dataList;
+    public Dictionary<int, UnitTableData> DataMap => _dataMap;
+    public List<UnitTableData> DataList => _dataList;
 
-    public Buff GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
-    public Buff Get(int key) => _dataMap[key];
-    public Buff this[int key] => _dataMap[key];
+    public UnitTableData GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+    public UnitTableData Get(int key) => _dataMap[key];
+    public UnitTableData this[int key] => _dataMap[key];
 
     public void Resolve(Dictionary<string, object> _tables)
     {

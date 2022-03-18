@@ -1,0 +1,44 @@
+[
+  {
+    "Id": 1,
+    "Name": {
+      "key": "/unit/name/unit1",
+      "text": "社畜1"
+    },
+    "Description": {
+      "key": "/unit/description/unit1",
+      "text": "996大师"
+    },
+    "BaseMaxHealth": 50,
+    "BaseAttack": 1,
+    "IconPath": "Sprites/Icon/Unit/Unit1"
+  },
+  {
+    "Id": 2,
+    "Name": {
+      "key": "/unit/name/unit2",
+      "text": "社畜2"
+    },
+    "Description": {
+      "key": "/unit/description/unit2",
+      "text": "007大师"
+    },
+    "BaseMaxHealth": 75,
+    "BaseAttack": 2,
+    "IconPath": "Sprites/Icon/Unit/Unit2"
+  },
+  {
+    "Id": 3,
+    "Name": {
+      "key": "/unit/name/unit3",
+      "text": "社畜3"
+    },
+    "Description": {
+      "key": "/unit/description/unit3",
+      "text": "修仙了"
+    },
+    "BaseMaxHealth": 100,
+    "BaseAttack": 3,
+    "IconPath": "Sprites/Icon/Unit/Unit3"
+  }
+]

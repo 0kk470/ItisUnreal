@@ -24,15 +24,4 @@ namespace Saltyfish.Data
 
         public const string ENEMY_TAG = "Enemy";
     }
-
-    public static class RoomConfig
-    {
-        public const int WhiteSpawnRoomId = 30001;
-
-        public const int BlackSpawnRoomId = 30002;
-
-        public const int WhiteBossRoomId = 30003;
-
-        public const int BlackBossRoomId = 30004;
-    }
 }

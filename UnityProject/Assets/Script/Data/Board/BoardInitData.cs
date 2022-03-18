@@ -14,14 +14,13 @@ namespace Saltyfish.Data
 
         public long Seed;
 
-        public Unit Player;
+        public int PlayerUnitId;
 
-        public Unit Boss;
+        public int BossUnitId;
 
         public void Reset()
         {
-            Player?.Reset();
-            Boss?.Reset();
+
         }
     }
 }

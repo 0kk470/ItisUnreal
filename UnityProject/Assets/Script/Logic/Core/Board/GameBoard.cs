@@ -18,7 +18,11 @@ namespace Saltyfish.Logic
 
         private Unit m_Player;
 
+        public Unit Player => m_Player;
+
         private Unit m_Boss;
+
+        public Unit Boss => m_Boss;
 
         private SystemRandom m_RandomGenerator;
 
@@ -100,12 +104,9 @@ namespace Saltyfish.Logic
 
         private void InitUnits(BoardCreateData createData)
         {
-            m_Player = createData.Player;
-            m_Boss = createData.Boss;
-            if(m_Player != null)
-            {
-                m_Player.IsPlayer = true;
-            }
+            m_Player = Unit.NewUnit(createData.PlayerUnitId);
+            m_Boss = Unit.NewUnit(createData.BossUnitId);
+            m_Player.IsPlayer = true;
         }
 
         private bool IsValidPos(int x, int y)

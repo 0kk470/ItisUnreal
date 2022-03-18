@@ -13,20 +13,20 @@ namespace cfg
    
 public sealed class Tables
 {
-    public Buffsht Buffsht {get; }
+    public UnitTable UnitTable {get; }
 
     public Tables(System.Func<string, JSONNode> loader)
     {
         var tables = new System.Collections.Generic.Dictionary<string, object>();
-        Buffsht = new Buffsht(loader("buffsht")); 
-        tables.Add("Buffsht", Buffsht);
+        UnitTable = new UnitTable(loader("unittable")); 
+        tables.Add("UnitTable", UnitTable);
 
-        Buffsht.Resolve(tables); 
+        UnitTable.Resolve(tables); 
     }
 
     public void TranslateText(System.Func<string, string, string> translator)
     {
-        Buffsht.TranslateText(translator); 
+        UnitTable.TranslateText(translator); 
     }
 }
 
