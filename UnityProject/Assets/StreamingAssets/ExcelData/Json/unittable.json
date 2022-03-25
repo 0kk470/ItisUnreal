@@ -11,6 +11,7 @@
     },
     "BaseMaxHealth": 50,
     "BaseAttack": 1,
+    "BaseAttackFreq": 1,
     "IconPath": "Sprites/Icon/Unit/Unit1"
   },
   {
@@ -25,6 +26,7 @@
     },
     "BaseMaxHealth": 75,
     "BaseAttack": 2,
+    "BaseAttackFreq": 3,
     "IconPath": "Sprites/Icon/Unit/Unit2"
   },
   {
@@ -39,6 +41,7 @@
     },
     "BaseMaxHealth": 100,
     "BaseAttack": 3,
+    "BaseAttackFreq": 5,
     "IconPath": "Sprites/Icon/Unit/Unit3"
   }
 ]

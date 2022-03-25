@@ -23,16 +23,18 @@ public sealed class UnitTableData :  Bright.Config.BeanBase
         { if(!_json["Description"]["key"].IsString) { throw new SerializationException(); }  Description_l10n_key = _json["Description"]["key"]; if(!_json["Description"]["text"].IsString) { throw new SerializationException(); }  Description = _json["Description"]["text"]; }
         { if(!_json["BaseMaxHealth"].IsNumber) { throw new SerializationException(); }  BaseMaxHealth = _json["BaseMaxHealth"]; }
         { if(!_json["BaseAttack"].IsNumber) { throw new SerializationException(); }  BaseAttack = _json["BaseAttack"]; }
+        { if(!_json["BaseAttackFreq"].IsNumber) { throw new SerializationException(); }  BaseAttackFreq = _json["BaseAttackFreq"]; }
         { if(!_json["IconPath"].IsString) { throw new SerializationException(); }  IconPath = _json["IconPath"]; }
     }
 
-    public UnitTableData(int Id, string Name, string Description, float BaseMaxHealth, float BaseAttack, string IconPath ) 
+    public UnitTableData(int Id, string Name, string Description, float BaseMaxHealth, float BaseAttack, int BaseAttackFreq, string IconPath ) 
     {
         this.Id = Id;
         this.Name = Name;
         this.Description = Description;
         this.BaseMaxHealth = BaseMaxHealth;
         this.BaseAttack = BaseAttack;
+        this.BaseAttackFreq = BaseAttackFreq;
         this.IconPath = IconPath;
     }
 
@@ -64,6 +66,10 @@ public sealed class UnitTableData :  Bright.Config.BeanBase
     /// </summary>
     public float BaseAttack { get; private set; }
     /// <summary>
+    /// 攻击频率(x回合后攻击一次)
+    /// </summary>
+    public int BaseAttackFreq { get; private set; }
+    /// <summary>
     /// 图标资源路径
     /// </summary>
     public string IconPath { get; private set; }
@@ -89,6 +95,7 @@ public sealed class UnitTableData :  Bright.Config.BeanBase
         + "Description:" + Description + ","
         + "BaseMaxHealth:" + BaseMaxHealth + ","
         + "BaseAttack:" + BaseAttack + ","
+        + "BaseAttackFreq:" + BaseAttackFreq + ","
         + "IconPath:" + IconPath + ","
         + "}";
     }

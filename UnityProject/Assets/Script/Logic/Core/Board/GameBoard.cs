@@ -170,13 +170,14 @@ namespace Saltyfish.Logic
 
             if(node.IsMine)
             {
-               OnPlayerDamage(node);
+                //TODO 可能有不同地雷类型触发逻辑
                MarkAsExplored(node);
             }
             else
             {
                 Explore(x, y);
             }
+            OnStep(node);
         }
 
         public void Explore(int x, int y)
@@ -189,7 +190,6 @@ namespace Saltyfish.Logic
             if(node.IsExplored)
                 return;
             CountMineNum(x,y);
-            OnBossDamage(node);
             MarkAsExplored(node);
             if (node.MineNum > 0)
                 return;
@@ -209,24 +209,30 @@ namespace Saltyfish.Logic
             EventManager.DispatchEvent(GameEventType.OnNodeUpdate, node);
         }
 
-        private void OnPlayerDamage(BoardNode node)
+        private void OnStep(BoardNode node)
         {
-            DamageInfo dmgInfo = new DamageInfo();
-            dmgInfo.AttackUnit = m_Boss;
-            dmgInfo.InjuredUnit = m_Player;
-            dmgInfo.RelatedNode = node;
-            dmgInfo.Damage = 1;
-            m_Player?.TakeDamage(dmgInfo);
+            CurStep++;
+            DoUnitStep(m_Player, m_Boss, node);
+            DoUnitStep(m_Boss, m_Player, node);
         }
 
-        private void OnBossDamage(BoardNode node)
+        private void DoUnitStep(Unit moveUnit, Unit waitUnit, BoardNode node)
+        {
+            moveUnit.OnStep(CurStep);
+            if (moveUnit.CanAttack(CurStep))
+            {
+                DoUnitDamage(node, moveUnit, waitUnit);
+            }
+        }
+
+        private void DoUnitDamage(BoardNode node, Unit attacker, Unit injured)
         {
             DamageInfo dmgInfo = new DamageInfo();
-            dmgInfo.AttackUnit = m_Player;
-            dmgInfo.InjuredUnit = m_Boss;
+            dmgInfo.AttackUnit = attacker;
+            dmgInfo.InjuredUnit = injured;
             dmgInfo.RelatedNode = node;
-            dmgInfo.Damage = node.MineNum;
-            m_Boss?.TakeDamage(dmgInfo);
+            dmgInfo.Damage = attacker.UnitData.Attack;
+            injured.TakeDamage(dmgInfo);
         }
     }
 }

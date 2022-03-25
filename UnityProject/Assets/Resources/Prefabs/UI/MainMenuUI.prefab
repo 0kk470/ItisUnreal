@@ -158,7 +158,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: MineSweeper
+  m_Text: MonsterSweeper
 --- !u!114 &4831789202069643586
 MonoBehaviour:
   m_ObjectHideFlags: 0

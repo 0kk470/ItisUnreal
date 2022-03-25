@@ -48,7 +48,9 @@ namespace Saltyfish.Logic
             unit.TableData = unitTable;
             unit.m_UnitData.BaseMaxHealth = unitTable.BaseMaxHealth;
             unit.m_UnitData.BaseAttack = unitTable.BaseMaxHealth;
+            unit.m_UnitData.BaseAttackFreq = unitTable.BaseAttackFreq;
             unit.SetAttack(unitTable.BaseAttack);
+            unit.SetAttackFrequency(unitTable.BaseAttackFreq);
             unit.SetMaxHealth(unitTable.BaseMaxHealth);
             unit.SetHp(unit.UnitData.MaxHealth);
             return unit;
@@ -63,6 +65,12 @@ namespace Saltyfish.Logic
         public void SetAttack(float attack)
         {
             m_UnitData.Attack = attack;
+        }
+
+        public void SetAttackFrequency(int freq)
+        {
+            freq = Mathf.Clamp(freq, 1, UnitData.MAX_FREQ);
+            m_UnitData.AttackFreq = freq;
         }
 
         public void SetHp(float newHp)
@@ -116,6 +124,16 @@ namespace Saltyfish.Logic
             {
                 GameManager.GameWin();
             }
+        }
+
+        public void OnStep(int step)
+        {
+            //TODO
+        }
+
+        public bool CanAttack(int step)
+        {
+            return step % m_UnitData.AttackFreq == 0;
         }
     }
 }
